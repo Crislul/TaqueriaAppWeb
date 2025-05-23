@@ -1,0 +1,125 @@
+﻿@model IEnumerable<Product>
+ 
+@{
+    ViewData["Title"] = "Product";
+}
+
+<div class="fullscreen-content">
+    <div class="content" style="background-color: rgba(255, 255, 255, 0.7); border-radius: 10px; padding: 1rem;">
+        <h2 class="text-center text-dark mb-5" style="font-weight: 900; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); font-size: 2.5rem;">
+            @ViewBag.CategoryName
+        </h2>
+
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-4">
+                    <div class="product-card shadow-lg">
+                        <div class="ajaxbg d-none">
+                            <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Cargando...</span>
+                                </div>
+                            </div>
+                            <p class="lead alert alert-success text-center d-none mt-3">
+                                El producto ha sido Agregado!!!
+                            </p>
+                        </div>
+
+                        <img src="~/media/products/@item.image" class="img-fluid rounded" alt="@item.Name" />
+                        <h4 class="text-dark">@item.Name</h4>
+                        <div class="text-dark">
+                            @Html.Raw(item.Description)
+                        </div>
+                        <p class="fw-bold text-warning">
+                            @item.Price.ToString("C2")
+                        </p>
+                        <p>
+                            <a asp-controller="Cart"
+                               asp-action="Add"
+                               asp-route-id="@item.Id"
+                               asp-route-returnUrl="@Context.Request.Path"
+                               data-id="@item.Id"
+                               class="btn btn-primary addToCart">
+                                Agregar al Carrito
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            }
+
+            @if (ViewBag.TotalPages > 1)
+            {
+                <div class="d-flex w-100 justify-content-center">
+                    <pagination page-count="@ViewBag.TotalPages" page-target="/products/@ViewBag.CategorySlug" page-number="@ViewBag.PageNumber" page-range="@ViewBag.PageRange">
+                    </pagination>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Fondo blanco semitransparente */
+    .content {
+        background: rgba(255, 255, 255, 0.7); /* Más opaco para mejor visibilidad */
+        backdrop-filter: blur(10px); /* Efecto de vidrio */
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 90%;
+    }
+
+    /* Tarjetas de productos */
+    .product-card {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 15px;
+        padding: 15px;
+        text-align: center;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .product-card:hover {
+        transform: scale(1.05);
+    }
+
+    /* Asegurar que los textos sean oscuros */
+    .product-card h4,
+    .product-card div,
+    .product-card p {
+        color: black !important;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $("a.addToCart").click(function (e) {
+                e.preventDefault();
+
+                let ajaxDiv = $(this).closest('.product-card').find('.ajaxbg');
+
+                ajaxDiv.removeClass("d-none");
+
+                let id = $(this).data("id");
+
+                $.get('/Cart/Add/' + id, {}, function (data) {
+                    $("div.smallcart").html(data);
+
+                    ajaxDiv.find("img").addClass("d-none");
+                    ajaxDiv.find("p").removeClass("d-none");
+
+                    setTimeout(() => {
+                        ajaxDiv.animate({ opacity: 0 }, function () {
+                            $(this)
+                                .addClass("d-none")
+                                .fadeTo(0.1, 1);
+                            $(this).find("img").removeClass("d-none");
+                            $(this).find("p").addClass("d-none");
+                        });
+                    }, 3000);
+                });
+            });
+        });
+    </script>
+}

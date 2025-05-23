@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Contáctanos";
+}
+
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+    <p><strong>¿Tienes preguntas, sugerencias o simplemente quieres saber más sobre nuestra taquería? ¡Estamos aquí para ayudarte! Puedes comunicarte con nosotros a través de las siguientes opciones:</strong></p>
+
+    <section>
+        <h2>Redes Sociales y Contacto</h2>
+        <p><strong>Síguenos en nuestras redes sociales o contáctanos para más información sobre nuestras promociones y eventos especiales:</strong></p>
+        <ul>
+            <li>
+                <strong>Perfil de Facebook:</strong>
+                <a href="https://www.facebook.com/share/18HKQ15aN8/?mibextid=wwXIfr" target="_blank">Visitar Perfil</a>
+            </li>
+            <li>
+                <strong>Página de Facebook:</strong>
+                <a href="https://www.facebook.com/share/163qmEK2VB/?mibextid=wwXIfr" target="_blank">Visitar Página</a>
+            </li>
+            <li>
+                <strong>Teléfono:</strong>
+                <a href="tel:+527336767056">+52 733 676 7056</a>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Contacto Directo</h2>
+        <p><strong>Si prefieres un contacto más directo, puedes enviarnos un mensaje o llamarnos. Nos encantaría saber de ti:</strong></p>
+        <ul>
+            <li>
+                <strong>Correo Electrónico:</strong>
+                <a href="taqueriaiguala288@gmail.com">taqueriaiguala288@gmail.com</a>
+            </li>
+            <li>
+                <strong>Teléfono:</strong>
+                <a href="tel:+527335837661">+52 733 583 7661</a>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Formulario de Contacto</h2>
+        <p><strong>También puedes completar el siguiente formulario y nos pondremos en contacto contigo lo antes posible:</strong></p>
+
+        <form action="@Url.Action("Enviar", "Contactos")" method="post">
+            <div class="form-group">
+                <label for="name">Nombre</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Tu nombre completo" required />
+            </div>
+
+            <div class="form-group">
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="Ingresa tu Correo" required />
+            </div>
+
+            <div class="form-group">
+                <label for="telefono">Número de Teléfono</label>
+                <input type="tel" id="telefono" name="telefono" class="form-control" placeholder="Ingresa tu Numero" required />
+            </div>
+
+            <div class="form-group">
+                <label for="message">Mensaje</label>
+                <textarea id="message" name="message" class="form-control" rows="5" placeholder="Escribe tu mensaje aquí" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success">Enviar Mensaje</button>
+        </form>
+    </section>
+</div>

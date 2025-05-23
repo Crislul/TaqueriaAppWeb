@@ -1,0 +1,64 @@
+﻿@model UserEdit
+
+@{
+    ViewData["Title"] = "Editar Cuenta";
+}
+
+<div class="container mt-5">
+    <!-- Encabezado -->
+    <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold text-primary">@ViewData["Title"]</h1>
+        <p class="text-muted">Actualiza los detalles de tu cuenta de manera rápida y segura.</p>
+    </div>
+
+    <!-- Formulario -->
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-4">
+                    <form asp-action="Edit">
+                        <!-- Mensaje de validación -->
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
+
+                        <!-- Correo -->
+                        <div class="mb-3">
+                            <label asp-for="Correo" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="Correo" class="form-control form-control-lg" placeholder="Ingresa tu correo" />
+                            <span asp-validation-for="Correo" class="text-danger"></span>
+                        </div>
+
+                        <!-- Contraseña -->
+                        <div class="mb-3">
+                            <label asp-for="Contraseña" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="Contraseña" class="form-control form-control-lg" placeholder="Ingresa tu nueva contraseña" />
+                            <span asp-validation-for="Contraseña" class="text-danger"></span>
+                        </div>
+
+                        <!-- Botón para guardar cambios -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-save"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón para regresar -->
+    <div class="text-center mt-4">
+        @* <a asp-action="Index" class="btn btn-secondary btn-lg">
+            <i class="bi bi-arrow-left-circle"></i> Volver al Menú Principal
+        </a> *@
+        <a href="@Url.Action("Welcome", "Inicio")" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i>  Volver al Menú Principal
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

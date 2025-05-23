@@ -1,0 +1,83 @@
+﻿@{
+    ViewData["Title"] = "Bienvenida";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 50px;
+            color: #000; /* Cambié el color de texto a negro */
+        }
+
+        .welcome-message {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #FF007F; /* Cambié el color de texto a negro */
+            margin-bottom: 20px;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: #000; /* Cambié el color de texto a negro */
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 30px;
+        }
+
+        .hero-image {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #000; /* Cambié el color de texto del footer a negro */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Image -->
+        <img src="/images/logo.png" alt="Taquería" style="width: 150px; height: auto;" class="hero-image">
+
+        <!-- Welcome Message -->
+        <div class="welcome-message">
+            ¡Bienvenido a Taquería Iguala!
+        </div>
+
+        <!-- Description -->
+        <div class="description">
+            Somos tu mejor opción para disfrutar de los tacos más deliciosos y auténticos de la región. <br>
+            Prepárate para una experiencia única llena de sabores tradicionales que te encantarán. 
+        </div>
+
+        <!-- Button -->
+        <a href="@Url.Action("All", "Products")" class="btn btn-primary">
+            Ir a la página principal
+        </a>
+    </div>
+
+    <!-- Footer -->
+@*     <footer>
+        Hecho con amor por el equipo de Taquería Iguala. 🌮
+    </footer> *@
+</body>
+</html>

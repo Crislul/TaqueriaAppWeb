@@ -1,0 +1,112 @@
+﻿@model Product
+
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<div class="container mt-5">
+    <h1 class="text-center text-primary mb-4">
+        <i class="bi bi-pencil-square"></i> Edit Product
+    </h1>
+
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <h4 class="card-title mb-4">
+                <i class="bi bi-file-earmark-text"></i> Product Information
+            </h4>
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input type="hidden" asp-for="image" />
+
+                <!-- Product Name -->
+                <div class="form-group mb-3">
+                    <label asp-for="Name" class="form-label">Product Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter product name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <!-- Product Description -->
+                <div class="form-group mb-3">
+                    <label asp-for="Description" class="form-label">Product Description</label>
+                    <textarea asp-for="Description" class="form-control" placeholder="Enter product description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <!-- Product Price -->
+                <div class="form-group mb-3">
+                    <label asp-for="Price" class="form-label">Product Price</label>
+                    <input asp-for="Price" class="form-control" placeholder="Enter product price" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+                <!-- Category Selection -->
+                <div class="form-group mb-3">
+                    <label asp-for="CategoryId" class="form-label">Category</label>
+                    <select asp-for="CategoryId" asp-items="@ViewBag.CategoryId" class="form-select">
+                        <option value="0">Choose a category</option>
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+
+                <!-- Stock -->
+                <div class="form-group mb-3">
+                    <label asp-for="Stock" class="form-label fw-bold">Stock Quantity</label>
+                    <input asp-for="Stock" class="form-control form-control-lg" type="number" min="0" placeholder="Enter available stock" />
+                    <span asp-validation-for="Stock" class="text-danger"></span>
+                </div>
+
+                <!-- Current Product Image -->
+                <div class="form-group mb-3">
+                    <label class="form-label">Current Product Image</label>
+                    <div>
+                        <img src="~/media/products/@Model.image" class="img-fluid rounded" alt="Current Product Image" width="200" />
+                    </div>
+                </div>
+
+                <!-- Product Image Upload -->
+                <div class="form-group mb-3">
+                    <label asp-for="ImageUpload" class="form-label">New Product Image</label>
+                    <input asp-for="ImageUpload" type="file" class="form-control" />
+                    <img src="" id="imgpreview" class="pt-2 img-fluid rounded" alt="Image Preview" />
+                    <span asp-validation-for="ImageUpload" class="text-danger"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group mb-3 text-center">
+                    <input type="submit" value="Update Product" class="btn btn-success btn-lg" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Action Links -->
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial");
+
+    <!-- Inicia CKEditor solo en la vista Edit -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.2.1/classic/ckeditor.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Inicializa CKEditor solo si no está ya inicializado
+            if (typeof ClassicEditor !== 'undefined') {
+                ClassicEditor
+                    .create(document.querySelector('#Description'))
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+
+            $("#ImageUpload").change(function () {
+                readURL(this);
+            });
+        });
+    </script>
+}

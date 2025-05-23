@@ -1,0 +1,65 @@
+﻿@model CmsShoppingCart.Models.DireccionEnvio
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white rounded-top-4 text-center">
+                    <h3 class="mb-0">🛵 Dirección de Envío</h3>
+                    <p class="mb-0">Por favor ingresa la dirección a la que deseas recibir tu pedido</p>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="GuardarDireccionEnvio" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Calle" class="form-label fw-bold">Calle</label>
+                            <input asp-for="Calle" class="form-control form-control-lg" placeholder="Ej. Av. Reforma 123" />
+                            <span asp-validation-for="Calle" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Colonia" class="form-label fw-bold">Colonia</label>
+                            <input asp-for="Colonia" class="form-control form-control-lg" placeholder="Ej. Centro" />
+                            <span asp-validation-for="Colonia" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Ciudad" class="form-label fw-bold">Ciudad</label>
+                            <input asp-for="Ciudad" class="form-control form-control-lg" placeholder="Ej. Ciudad de México" />
+                            <span asp-validation-for="Ciudad" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="CodigoPostal" class="form-label fw-bold">Código Postal</label>
+                            <input asp-for="CodigoPostal" class="form-control form-control-lg" placeholder="Ej. 12345" />
+                            <span asp-validation-for="CodigoPostal" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Telefono" class="form-label fw-bold">Teléfono</label>
+                            <input asp-for="Telefono" class="form-control form-control-lg" placeholder="Ej. 55 1234 5678" />
+                            <span asp-validation-for="Telefono" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Referencias" class="form-label fw-bold">Referencias</label>
+                            <input asp-for="Referencias" class="form-control form-control-lg" placeholder="Ej. Casa color blanco con portón negro" />
+                            <span asp-validation-for="Referencias" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill">
+                                <i class="bi bi-save me-2"></i> Guardar Dirección
+                            </button>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <a href="@Url.Action("Index", "Cart")" class="btn btn-success btn-lg">
+                                ⬅️ Regresar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

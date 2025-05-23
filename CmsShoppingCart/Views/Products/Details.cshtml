@@ -1,0 +1,21 @@
+﻿@model CmsShoppingCart.Models.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Url.Content("~/media/products/" + Model.image)" class="img-fluid rounded shadow" alt="@Model.Name">
+        </div>
+        <div class="col-md-6">
+            <h2 class="fw-bold text-primary">@Model.Name</h2>
+            <p class="text-muted">@Model.Description</p>
+            <h4 class="text-success">Precio: $@Model.Price</h4>
+            <p><strong>Categoría:</strong> @Model.Category.Name</p>
+
+            <a href="@Url.Action("All", "Products")" class="btn btn-secondary mt-3">Volver a la tienda</a>
+        </div>
+    </div>
+</div>

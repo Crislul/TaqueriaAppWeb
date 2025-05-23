@@ -1,0 +1,29 @@
+﻿/* Estilo para la imagen de fondo */
+.background-image {
+    background-image: url('/images/tacos.jpg'); /* Ruta a la imagen */
+    background-size: cover; /* Hace que la imagen cubra todo el espacio */
+    background-position: center; /* Centra la imagen */
+    background-attachment: fixed; /* La imagen no se moverá al hacer scroll */
+    height: 100vh; /* Hace que la imagen ocupe toda la altura de la ventana */
+    width: 100%; /* Asegura que la imagen ocupe toda la anchura */
+}
+
+/* Contenedor principal que tiene el contenido semitransparente sobre la imagen */
+.fullscreen-content {
+    position: relative;
+    z-index: 1; /* Asegura que el contenido quede por encima de la imagen */
+    min-height: 100vh; /* Asegura que ocupe toda la pantalla */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white; /* Color del texto */
+}
+
+/* Fondo semitransparente para el contenido */
+.content {
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo negro con transparencia */
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 80%; /* Limita el ancho del contenido */
+    text-align: center;
+}

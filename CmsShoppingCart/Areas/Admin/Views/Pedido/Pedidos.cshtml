@@ -1,0 +1,118 @@
+﻿@using CmsShoppingCart.Models
+@model IEnumerable<CmsShoppingCart.Models.Venta>
+
+@{
+    ViewData["Title"] = "Pedidos";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Pedidos</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Productos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pedido in Model)
+                {
+                    <tr>
+                        <td>@pedido.Id</td>
+                        <td>@pedido.Cliente</td>
+                        <td>@pedido.FechaVenta.ToShortDateString()</td>
+                        <td>@pedido.Total.ToString("C")</td>
+                        <td>
+                            @switch (pedido.Estado)
+                            {
+                                case "PendienteDePago":
+                                    <span class="badge bg-warning text-dark">Pendiente</span>
+                                    break;
+                                case "Pagado":
+                                    <span class="badge bg-info text-dark">Pagado</span>
+                                    break;
+                                case "Completada":
+                                    <span class="badge bg-success">Completada</span>
+                                    break;
+                                case "Cancelada":
+                                    <span class="badge bg-danger">Cancelada</span>
+                                    break;
+                                default:
+                                    <span class="badge bg-secondary">Desconocido</span>
+                                    break;
+                            }
+                        </td>
+                        <td>
+                            <!-- Mostrar productos del pedido -->
+                            <ul>
+                                @foreach (var detalle in pedido.Detalles)
+                                {
+                                    <li>
+                                        <div class="d-flex">
+                                            <img src="~/media/products/@detalle.Imagen" alt="@detalle.Producto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px; margin-right: 10px;" />
+                                            <div>
+                                                <strong>@detalle.Producto</strong><br />
+                                                Cantidad: @detalle.Cantidad<br />
+                                                Precio: @detalle.Precio.ToString("C")
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                        <td>
+                            @if (pedido.Estado == EstadoVenta.Pagado.ToString())
+                            {
+                                <form asp-action="ActualizarEstado" asp-controller="Admin" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@pedido.Id" />
+                                    <input type="hidden" name="estado" value="@EstadoVenta.Completada.ToString()" />
+                                    <button type="submit" class="btn btn-success btn-sm">Marcar como Completada</button>
+                                </form>
+                            }
+                            else if (pedido.Estado == EstadoVenta.PendienteDePago.ToString())
+                            {
+                                <form asp-action="ActualizarEstado" asp-controller="Admin" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@pedido.Id" />
+                                    <input type="hidden" name="estado" value="@EstadoVenta.Cancelada.ToString()" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Cancelar Pedido</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+
+                    <!-- Dirección de Envío -->
+                    <tr>
+                        <td colspan="7">
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">Dirección de Envío</h5>
+                                    <ul class="list-unstyled mb-0">
+                                        <li><strong>Calle:</strong> @pedido.DireccionEnvio?.Calle</li>
+                                        <li><strong>Colonia:</strong> @pedido.DireccionEnvio?.Colonia</li>
+                                        <li><strong>Ciudad:</strong> @pedido.DireccionEnvio?.Ciudad</li>
+                                        <li><strong>Código Postal:</strong> @pedido.DireccionEnvio?.CodigoPostal</li>
+                                        <li><strong>Teléfono:</strong> @pedido.DireccionEnvio?.Telefono</li>
+                                        <li><strong>Referencias:</strong> @pedido.DireccionEnvio?.Referencias</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Page", "Pages", new { area = "", slug = "home" })" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Regresar
+        </a>
+    </div>
+</div>

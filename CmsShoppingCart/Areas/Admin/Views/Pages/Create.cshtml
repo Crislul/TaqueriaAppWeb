@@ -1,0 +1,63 @@
+﻿@model Page
+
+@{
+    ViewData["Title"] = "Create a Page";
+}
+
+<div class="container mt-5">
+    <h1 class="text-primary text-center mb-4">
+        <i class="bi bi-file-earmark-plus"></i> Create a Page
+    </h1>
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none" role="alert">
+                            Please fix the errors below.
+                        </div>
+
+                        <!-- Title -->
+                        <div class="form-group mb-3">
+                            <label asp-for="Title" class="form-label fw-bold">Page Title</label>
+                            <input asp-for="Title" class="form-control shadow-sm" placeholder="Enter page title" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="form-group mb-3">
+                            <label asp-for="Content" class="form-label fw-bold">Content</label>
+                            <textarea asp-for="Content" class="form-control shadow-sm" rows="10"></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-save"></i> Create Page
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            // Verifica si CKEditor está disponible antes de usarlo
+                if (typeof CKEDITOR !== 'undefined') {
+                        CKEDITOR.replace("Content");
+                    } else {
+                        console.error("CKEditor no se ha cargado correctamente.");
+                    }
+                });
+    </script>
+}

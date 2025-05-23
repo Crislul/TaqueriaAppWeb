@@ -1,0 +1,116 @@
+﻿@model CmsShoppingCart.Models.Venta
+
+@{
+    ViewData["Title"] = "Confirmación de Pedido";
+    Layout = "_Layout";
+}
+
+<div class="container my-5">
+    <div class="text-center mb-4">
+        <h2 class="display-4 fw-bold text-success text-center my-4">
+            🎉 ¡Ya Casi Es Tuyo! 🎉
+        </h2>
+    </div>
+
+    <!-- Resumen de la Venta -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title">Resumen de la Venta</h4>
+            <p><strong>Folio:</strong> @Model.Id</p>
+            <p><strong>Fecha:</strong> @Model.FechaVenta.ToString("dd/MM/yyyy HH:mm")</p>
+            <p><strong>Total:</strong> <span class="text-success">$@Model.Total.ToString("0.00")</span></p>
+        </div>
+    </div>
+
+    <!-- Dirección de Envío -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title">Dirección de Envío</h4>
+            <ul class="list-unstyled">
+                <li><strong>Calle:</strong> @Model.DireccionEnvio?.Calle</li>
+                <li><strong>Colonia:</strong> @Model.DireccionEnvio?.Colonia</li>
+                <li><strong>Ciudad:</strong> @Model.DireccionEnvio?.Ciudad</li>
+                <li><strong>Código Postal:</strong> @Model.DireccionEnvio?.CodigoPostal</li>
+                <li><strong>Teléfono:</strong> @Model.DireccionEnvio?.Telefono</li>
+                <li><strong>Referencias:</strong> @Model.DireccionEnvio?.Referencias</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Productos Vendidos -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title">Productos Vendidos</h4>
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Imagen</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Detalles)
+                    {
+                        <tr>
+                            <td>@item.Producto</td>
+                            <td>
+                                <img src="~/media/products/@item.Imagen" alt="@item.Producto"
+                                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;" />
+                            </td>
+                            <td>@($"{item.Precio:C2}")</td>
+                            <td>@item.Cantidad</td>
+                            <td>@($"{item.Cantidad * item.Precio:C2}")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Confirmación de pago -->
+    <div class="text-center">
+        <h4>¿Deseas continuar con el pago?</h4>
+
+        @if (Model.MetodoPago == "PayPal")
+        {
+            <form action="@Url.Action("CrearOrden", "PayPal")" method="post">
+                <input type="hidden" name="pedidoId" value="@Model.Id" />
+                <input type="hidden" name="total" value="@Model.Total" />
+
+                @foreach (var item in Model.Detalles)
+                {
+                    <input type="hidden" name="productos[]" value="@item.Producto" />
+                    <input type="hidden" name="precios[]" value="@item.Precio" />
+                    <input type="hidden" name="cantidades[]" value="@item.Cantidad" />
+                    <input type="hidden" name="subtotales[]" value="@(item.Cantidad * item.Precio)" />
+                }
+
+                <button type="submit" class="btn btn-primary btn-lg mt-4">💳 Pagar con PayPal</button>
+            </form>
+        }
+        else if (Model.MetodoPago == "MercadoPago")
+        {
+            <form action="@Url.Action("IniciarPago", "MercadoPago")" method="post">
+                <input type="hidden" name="ventaId" value="@Model.Id" />
+                <button type="submit" class="btn btn-dark btn-lg mt-4">💳 Pagar con MercadoPago</button>
+            </form>
+        }
+        else if (Model.MetodoPago == "PagoContraEntrega")
+        {
+            <div class="alert alert-info mt-4">
+                <strong>Listo:</strong> Tu pedido ha sido confirmado. Pagarás al recibir tu pedido.
+            </div>
+            <a href="@Url.Action("Page", "Pages", new { slug = "home" })" class="btn btn-success btn-lg mt-3">Volver al inicio</a>
+        }
+        else
+        {
+            <form action="@Url.Action("ProcesarTarjeta", "PagoTarjeta")" method="post">
+                <input type="hidden" name="ventaId" value="@Model.Id" />
+                <button type="submit" class="btn btn-warning btn-lg mt-4">💳 Procesar Tarjeta</button>
+            </form>
+        }
+    </div>
+</div>

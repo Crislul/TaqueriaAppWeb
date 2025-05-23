@@ -1,0 +1,68 @@
+﻿@model CmsShoppingCart.Models.Venta
+
+@{
+    ViewData["Title"] = "Detalle de Venta";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold">
+            🛒 Detalle de Venta #@Model.Id
+        </h2>
+        <a href="@Url.Action("Index", "ReporteVentas")" class="btn btn-outline-secondary">
+            ⬅ Volver al Reporte
+        </a>
+    </div>
+
+    <div class="card shadow-lg rounded p-4">
+        <h5 class="text-muted mb-3">Información de la Venta</h5>
+        <p><strong>Cliente:</strong> @Model.Cliente</p>
+        <p><strong>Fecha:</strong> @Model.FechaVenta.ToString("dd/MM/yyyy HH:mm")</p>
+        <p><strong>Total:</strong> <span class="text-success fw-bold">$@Model.Total</span></p>
+        <p><strong>Método de Pago:</strong> <span class="badge bg-info">@Model.MetodoPago</span></p>
+        <p>
+            <strong>Estado:</strong>
+            @if (Model.Estado == "Completada")
+            {
+                <span class="badge bg-success">✔ Completada</span>
+            }
+            else if (Model.Estado == "Pendiente")
+            {
+                <span class="badge bg-warning text-dark">⌛ Pendiente</span>
+            }
+            else
+            {
+                <span class="badge bg-danger">❌ Cancelado</span>
+            }
+        </p>
+    </div>
+
+    <h3 class="text-primary mt-4">Productos Vendidos</h3>
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-bordered table-hover text-center">
+            <thead class="bg-dark text-white">
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody class="bg-light">
+                @foreach (var item in Model.Detalles)
+                {
+                    <tr>
+                        <td>@item.Producto</td>
+                        <td>@item.Cantidad</td>
+                        <td>$@item.Precio</td>
+                        <td>$@(item.Cantidad * item.Precio)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "ReporteVentas")" class="btn btn-primary btn-lg">Volver al Reporte</a>
+    </div>
+</div>

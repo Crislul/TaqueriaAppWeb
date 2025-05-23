@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Todos los Productos";
+}
+
+<div class="container py-5">
+    <h1 class="display-4 text-center pb-5 text-dark" style="font-weight: 900; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);">
+        Todos los Productos
+    </h1>
+
+    <div class="row justify-content-center">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-lg border-0 rounded-3">
+                    <!-- Imagen del producto -->
+                    <img src="~/media/products/@item.image" class="card-img-top img-fluid rounded-top" alt="@item.Name" style="height: 250px; object-fit: cover;">
+
+                    <div class="card-body d-flex flex-column">
+                        <!-- Nombre del producto -->
+                        <h5 class="card-title fw-bold text-primary">@item.Name</h5>
+
+                        <!-- Descripción del producto -->
+                        <p class="card-text text-muted flex-grow-1">@Html.Raw(item.Description)</p>
+
+                        <!-- Precio del producto -->
+                        <p class="card-text"><strong class="text-success">@item.Price.ToString("C2")</strong></p>
+
+                        @if (!User.IsInRole("admin"))
+                        {
+                            <!-- Botón para agregar al carrito (oculto si es Admin) -->
+                            <a asp-controller="Cart"
+                               asp-action="Add"
+                               asp-route-id="@item.Id"
+                               asp-route-returnUrl="@Context.Request.Path"
+                               data-id="@item.Id"
+                               class="btn btn-primary mt-auto addToCart">
+                                Agregar al Carrito
+                            </a>
+
+                            <!-- Contenedor de animación de carga -->
+                            <div class="ajaxbg d-none">
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Cargando...</span>
+                                    </div>
+                                </div>
+                                <p class="lead alert alert-success text-center d-none mt-3">
+                                    El producto ha sido Agregado!!!
+                                </p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (ViewBag.TotalPages > 1)
+        {
+            <div class="d-flex w-100 justify-content-center mt-4">
+                <pagination page-count="@ViewBag.TotalPages" page-target="/products" page-number="@ViewBag.PageNumber" page-range="@ViewBag.PageRange">
+                </pagination>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $("a.addToCart").on("click", function (e) {
+                e.preventDefault(); // Previene que el enlace redirija
+
+                // Encuentra el contenedor del loader
+                let ajaxDiv = $(this).closest(".card").find("div.ajaxbg");
+                ajaxDiv.removeClass("d-none"); // Muestra el div de animación
+
+                // Obtiene el ID del producto
+                let id = $(this).data("id");
+
+                // Realiza la petición GET para agregar el producto
+                $.get('/Cart/Add/' + id, {}, function (data) {
+                    // Actualiza el contenido del carrito pequeño
+                    $("div.smallcart").html(data);
+
+                    // Oculta la animación después de actualizar
+                    ajaxDiv.find(".spinner-border").addClass("d-none"); // Oculta el spinner
+                    ajaxDiv.find("p").removeClass("d-none"); // Muestra mensaje de éxito
+
+                    setTimeout(() => {
+                        ajaxDiv.animate({ opacity: 0 }, function () {
+                            $(this)
+                                .addClass("d-none")
+                                .fadeTo(0.1, 1);
+                            $(this).find(".spinner-border").removeClass("d-none");
+                            $(this).find("p").addClass("d-none");
+                        });
+                    }, 3000);
+                });
+            });
+        });
+    </script>
+}

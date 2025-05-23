@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Category>
+
+<div class="card shadow-lg border-0">
+    <div class="card-header bg-primary text-white text-center fw-bold">
+        <i class="bi bi-list-ul"></i> Categorías
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item text-center">
+            <a class="nav-link fw-bold text-dark hover-effect" asp-controller="Products" asp-action="Index">
+                <i class="bi bi-box-seam"></i> Todos los Productos
+            </a>
+        </li>
+
+        @foreach (var item in Model)
+        {
+            <li class="list-group-item text-center">
+                <a class="nav-link fw-bold text-dark hover-effect"
+                   asp-controller="Products" asp-action="ProductsByCategory"
+                   asp-route-categorySlug="@item.Slug">
+                    <i class="bi bi-tag"></i> @item.Name
+                </a>
+            </li>
+        }
+    </ul>
+</div>
+
+<style>
+    .hover-effect {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .hover-effect:hover {
+        color: #0d6efd !important;
+        font-weight: bold;
+        transform: scale(1.05);
+    }
+</style>

@@ -1,0 +1,107 @@
+﻿@model Product
+
+@{
+    ViewData["Title"] = "Create Product";
+}
+
+<div class="container mt-5">
+    <h1 class="text-center text-primary mb-4">
+        <i class="bi bi-plus-circle"></i> Create Product
+    </h1>
+
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Name -->
+                <div class="form-group mb-4">
+                    <label asp-for="Name" class="form-label fw-bold">Product Name</label>
+                    <input asp-for="Name" class="form-control form-control-lg" placeholder="Enter product name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group mb-4">
+                    <label asp-for="Description" class="form-label fw-bold">Product Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="5" placeholder="Enter a detailed description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <!-- Price -->
+                <div class="form-group mb-4">
+                    <label asp-for="Price" class="form-label fw-bold">Price</label>
+                    <input asp-for="Price" class="form-control form-control-lg" placeholder="Enter product price" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+                <!-- Category -->
+                <div class="form-group mb-4">
+                    <label asp-for="CategoryId" class="form-label fw-bold">Category</label>
+                    <select asp-for="CategoryId" asp-items="@ViewBag.CategoryId" class="form-control form-control-lg">
+                        <option value="0">Choose a category</option>
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+
+                <!-- Stock -->
+                <div class="form-group mb-4">
+                    <label asp-for="Stock" class="form-label fw-bold">Stock Quantity</label>
+                    <input asp-for="Stock" class="form-control form-control-lg" type="number" min="0" placeholder="Enter available stock" />
+                    <span asp-validation-for="Stock" class="text-danger"></span>
+                </div>
+
+                <!-- Image Upload -->
+                <div class="form-group mb-4">
+                    <label asp-for="ImageUpload" class="form-label fw-bold">Product Image</label>
+                    <input asp-for="ImageUpload" class="form-control form-control-lg" type="file" id="ImageUpload" />
+                    <img src="" id="imgpreview" class="pt-2 img-thumbnail d-none" alt="Image Preview" style="max-width: 200px;" />
+                    <span asp-validation-for="ImageUpload" class="text-danger"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group mb-4">
+                    <input type="submit" value="Create Product" class="btn btn-success btn-lg w-100" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Back to List Button -->
+    <div class="d-flex justify-content-between mt-4">
+        <a asp-action="Index" class="btn btn-secondary shadow-sm">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function () {
+            // Verifica si CKEditor está disponible
+            if (typeof CKEDITOR !== 'undefined') {
+                CKEDITOR.replace("Description"); // Inicializa CKEditor
+            } else {
+                console.error("CKEditor no se ha cargado correctamente.");
+            }
+
+            // Image preview on file input change
+            $("#ImageUpload").change(function () {
+                readURL(this);
+            });
+
+            // Function to display image preview
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#imgpreview').attr('src', e.target.result).removeClass('d-none');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        });
+    </script>
+}

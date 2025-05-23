@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Page>
+
+@{
+    // Lista estática con los slugs de las vistas personalizadas
+    var customPages = new List<string> { "Sobre Nosotros", "Servicios", "Contactos" };
+
+    // Diccionario para agregar iconos a cada página
+    var pageIcons = new Dictionary<string, string>
+    {
+        { "Sobre Nosotros", "bi bi-info-circle" },
+        { "Servicios", "bi bi-tools" },
+        { "Contactos", "bi bi-telephone" }
+    };
+}
+
+<ul class="navbar-nav">
+    @foreach (var slug in customPages)
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark fw-bold hover-effect d-flex align-items-center"
+               href="@Url.Action(slug, "Pages")">
+                <i class="@pageIcons[slug] me-2"></i> @slug
+            </a>
+        </li>
+    }
+</ul>
+
+<style>
+    .hover-effect {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .hover-effect:hover {
+        color: #0d6efd !important;
+        font-weight: bold;
+        transform: scale(1.05);
+    }
+</style>

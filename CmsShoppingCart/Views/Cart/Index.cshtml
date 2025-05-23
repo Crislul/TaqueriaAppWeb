@@ -1,0 +1,206 @@
+﻿@model CartViewModel
+
+@{
+    ViewData["Title"] = "Cart Overview";
+}
+
+<!-- ANIMACIÓN BONITA PARA ALERTA -->
+@if (TempData["DireccionAgregada"] != null)
+{
+    <div class="notificacion fade-slide-in" id="mensajeAlerta">
+        ✅ @TempData["DireccionAgregada"]
+    </div>
+}
+
+@if (Model.CartItems.Any())
+{
+    <h1>Descripción Del Carrito</h1>
+    <div class="cartWrapper">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                    <th>Precio</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CartItems)
+                {
+                    <tr>
+                        <td>
+                            <img src="~/media/products/@item.Image" alt="@item.ProductName"
+                                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;" />
+                        </td>
+
+                        <td>@item.ProductName</td>
+                        <td>@item.Quantity</td>
+                        <td>
+                            <a asp-action="Add" asp-route-id="@item.ProductId" class="btn btn-sm btn-primary">+</a>
+                            <a asp-action="Decrease" asp-route-id="@item.ProductId" class="btn btn-sm btn-success">-</a>
+                            <a asp-action="Remove" asp-route-id="@item.ProductId" class="btn btn-sm btn-danger">Eliminar</a>
+                        </td>
+                        <td>@($"{item.Price:C2}")</td>
+                        <td>@($"{item.Quantity * item.Price:C2}")</td>
+                    </tr>
+                }
+
+                <tr>
+                    <td class="text-right fw-bold" colspan="5">Total de Compra:</td>
+                    <td class="fw-bold">@($"{Model.GrandTotal:C2}")</td>
+                </tr>
+
+                <tr>
+                    <td class="text-right" colspan="6">
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <a asp-action="Limpiar" class="btn btn-danger">🗑 Vaciar carrito</a>
+                            <a asp-action="DireccionEnvio" class="btn btn-warning">📍 Agregar Dirección Para Envío</a>
+                        </div>
+
+                        @if (Model.DireccionEnvio != null)
+                        {
+                            <div class="direccion-info border p-3 mb-3 rounded">
+                                @* <p class="mb-1"><strong>Dirección de Envío:</strong></p>
+                                <p>@Model.DireccionEnvio.Calle, @Model.DireccionEnvio.Colonia, @Model.DireccionEnvio.Ciudad, @Model.DireccionEnvio.CodigoPostal</p> *@
+                                <div class="d-flex flex-wrap gap-2">
+                                    <a href="@Url.Action("MisDirecciones", "Cart")" class="btn btn-info" id="btnVerDirecciones">🏠 Mis Direcciones</a>
+                                </div>
+                            </div> 
+                        }
+
+                        @* <form asp-controller="Cart" asp-action="ConfirmarPedido" method="post">
+                            <button type="submit" class="btn btn-success btn-lg">Continuar ➡️</button>
+                        </form> *@
+                        <form asp-action="ConfirmarPedido" method="post" class="p-3 border rounded shadow-sm bg-light">
+                            <div class="form-group mb-3">
+                                <label for="metodoPago" class="form-label fw-bold">Selecciona tu Método de Pago</label>
+                                <select id="metodoPago" name="metodoPago" class="form-control" required>
+                                    <option value="">-- Elige una opción --</option>
+                                    <option value="TarjetaCredito">Tarjeta de Crédito</option>
+                                    <option value="TarjetaDebito">Tarjeta de Débito</option>
+                                    <option value="PayPal">PayPal</option>
+                                    <option value="PagoContraEntrega">Pago Contra Entrega</option>
+                                    <option value="MercadoPago">Mercado Pago</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Confirmar Pedido</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 🏠 MIS DIRECCIONES -->
+        @if (Model.TodasLasDirecciones?.Any() == true)
+        {
+            <div class="text-center mt-5 mb-3">
+                <button class="btn btn-outline-secondary" type="button" id="btnVerDirecciones">🏠 Ver Mis Direcciones</button>
+            </div>
+
+            <div id="contenedorDirecciones" class="d-none">
+                <h2 class="mt-4 mb-3">🏠 Mis Direcciones</h2>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    @foreach (var dir in Model.TodasLasDirecciones)
+                    {
+                        <div class="col">
+                            <div class="card border-primary shadow-sm h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">📍 @dir.Calle, @dir.Colonia</h5>
+                                    <p class="card-text">
+                                        <strong>Ciudad:</strong> @dir.Ciudad<br />
+                                        <strong>CP:</strong> @dir.CodigoPostal<br />
+                                        <strong>Tel:</strong> @dir.Telefono<br />
+                                        <strong>Ref:</strong> @dir.Referencias
+                                    </p>
+                                    <div class="d-flex justify-content-between">
+                                        <a href="@Url.Action("EditarDireccionEnvio", new { id = dir.Id })" class="btn btn-sm btn-outline-primary">✏️ Editar</a>
+                                        <a href="@Url.Action("EliminarDireccionEnvio", new { id = dir.Id })" class="btn btn-sm btn-outline-danger">🗑 Eliminar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <h3 class="display-4 text-center">Tu carrito está vacío!!!</h3>
+}
+
+@* <partial name="~/Views/Cart/_PayPalPartial.cshtml" for="CartItems" /> *@
+
+@section Scripts {
+    <script>
+        // Ocultar mensaje de éxito después de 4 segundos
+        setTimeout(function () {
+            var alerta = document.getElementById("mensajeAlerta");
+            if (alerta) {
+                alerta.classList.remove("show");
+                alerta.classList.add("fade");
+                setTimeout(() => alerta.remove(), 500);
+            }
+        }, 4000);
+
+        $(function () {
+            $("a.checkout").click(function (e) {
+                e.preventDefault();
+                $("div.cartbg").removeClass("d-none");
+                $.get("/Cart/Limpiar", {}, function () {
+                    $("form.paypalform").submit();
+                });
+            });
+        });
+
+        // Mostrar/Ocultar las direcciones al hacer clic en el botón
+        document.addEventListener("DOMContentLoaded", function () {
+            var btnVerDirecciones = document.getElementById("btnVerDirecciones");
+            if (btnVerDirecciones) {
+                btnVerDirecciones.addEventListener("click", function () {
+                    var contenedor = document.getElementById("contenedorDirecciones");
+                    if (contenedor) {
+                        contenedor.classList.toggle("d-none");
+                        this.textContent = contenedor.classList.contains("d-none")
+                            ? "🏠 Ver Mis Direcciones"
+                            : "🔽 Ocultar Direcciones";
+                    }
+                });
+            }
+        });
+    </script>
+
+    <style>
+        @@keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notificacion {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #198754;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1055;
+            font-size: 1.2rem;
+            text-align: center;
+            animation: fadeSlideIn 0.6s ease-out;
+        }
+    </style>
+}

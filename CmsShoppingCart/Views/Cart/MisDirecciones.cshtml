@@ -1,0 +1,71 @@
+﻿@model IEnumerable<CmsShoppingCart.Models.DireccionEnvio>
+
+@{
+    ViewData["Title"] = "Mis Direcciones";
+}
+
+<h2 class="text-center my-4">🏠 Mis Direcciones Guardadas</h2>
+
+<div class="container">
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var direccion in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm @(direccion.EsSeleccionada ? "border-success" : "border-primary")">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title text-primary mb-0">🏠 Dirección</h5>
+
+                                @if (direccion.EsSeleccionada)
+                                {
+                                    <span class="badge bg-success">Seleccionada</span>
+                                }
+                                else
+                                {
+                                    <form asp-action="SeleccionarDireccionEnvio" asp-controller="Cart" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@direccion.Id" />
+                                        <button type="submit" class="btn btn-outline-primary btn-sm">
+                                            📌 Seleccionar
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+
+                            <p class="card-text">
+                                <strong>Calle:</strong> @direccion.Calle <br />
+                                <strong>Colonia:</strong> @direccion.Colonia <br />
+                                <strong>Ciudad:</strong> @direccion.Ciudad <br />
+                                <strong>Código Postal:</strong> @direccion.CodigoPostal
+                            </p>
+
+                            <div class="d-flex justify-content-between mt-3">
+                                <a href="@Url.Action("EditarDireccionEnvio", "Cart", new { id = direccion.Id })" class="btn btn-outline-info btn-sm">
+                                    ✏️ Editar
+                                </a>
+                                <a href="@Url.Action("EliminarDireccionEnvio", new { id = direccion.Id })" class="btn btn-outline-danger btn-sm">
+                                    🗑 Eliminar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center">
+                <div class="alert alert-warning" role="alert">
+                    No tienes direcciones guardadas.
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "Cart")" class="btn btn-success btn-lg">
+            ⬅️ Regresar
+        </a>
+    </div>
+</div>

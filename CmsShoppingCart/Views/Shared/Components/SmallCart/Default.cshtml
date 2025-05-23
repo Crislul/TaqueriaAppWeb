@@ -1,0 +1,34 @@
+﻿@model SmallCartViewModel
+
+@if (Model != null)
+{
+    <div class="card shadow-sm p-3 rounded">
+        <h5 class="text-primary fw-bold mb-3">
+            🛒 Tu Carrito
+        </h5>
+        <p class="mb-2 text-dark">
+            <i class="bi bi-cart-check-fill text-success"></i>
+            <span class="fw-bold">Artículos en el Carrito:</span>
+            <span class="badge bg-primary">@Model.NumberOfItems</span>
+        </p> 
+        <p class="mb-3 text-dark">
+            <i class="bi bi-cash-coin text-warning"></i>
+            <span class="fw-bold">Total:</span> <b>@Model.TotalAmount.ToString("C2")</b>
+        </p>
+        <div class="d-grid gap-2">
+            <a class="btn btn-outline-primary" asp-controller="Cart" asp-action="Index">
+                🛒 Ver Carrito
+            </a>
+            <a class="btn btn-outline-danger" asp-controller="Cart" asp-action="Limpiar">
+                🗑️ Vaciar Carrito
+            </a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning text-center" role="alert">
+        <i class="bi bi-cart-x-fill text-danger fs-4"></i>
+        <p class="lead m-0">Tu carrito está vacío 😢</p>
+    </div>
+}

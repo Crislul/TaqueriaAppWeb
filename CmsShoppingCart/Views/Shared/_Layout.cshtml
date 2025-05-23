@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] Taqueria Iguala</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/Estilos.css" />
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <!-- Imagen de fondo -->
+    <div class="background-image" style="background-image: url('/images/tacos.jpg'); background-size: cover; background-position: center; background-attachment: fixed; height: 100vh; width: 100%; position: fixed; top: 0; left: 0; z-index: -1;"></div>
+
+    <header style="position: relative; z-index: 1;">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light" style="background-color: rgba(255, 255, 255, 0.8); border-bottom: 1px solid rgba(0, 0, 0, 0.1); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); mb-3">
+            <div class="container">
+                <a class="navbar-brand" href="@Url.Action("Welcome", "Inicio")" )">
+                    Taqueria Iguala
+                </a>
+                <a class="nav-link d-inline font-weight-bold" asp-controller="Ubicacion" asp-action="Index">
+                    Ubicación
+                </a>
+                <!-- Botón de navegación colapsable de la barra -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1 justify-content-end align-items-center gap-2">
+                        @if (User?.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item">
+                                <a asp-controller="Account" asp-action="Edit" class="btn btn-outline-primary btn-sm px-3">
+                                    Mi Cuenta
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-danger btn-sm px-3">
+                          Cerrar Sesión
+                                </a>
+                            </li>
+                            @if (User.IsInRole("admin") || User.IsInRole("editor"))
+                            {
+                                <li class="nav-item">
+                                    <a asp-area="Admin" asp-controller="Pages" asp-action="Index" class="btn btn-outline-success btn-sm px-3">
+                                        Administración General
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="Contactos" asp-action="Mensajes" class="btn btn-outline-warning btn-sm px-3">
+                                        Mensajes Recibidos
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="Pedido" asp-action="Pedidos" class="btn btn-outline-primary btn-sm px-3">
+                                        Pedidos Recibidos
+                                    </a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-success btn-sm px-3">
+                                    Iniciar Sesión
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary btn-sm px-3">
+                                    Registrarse
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav flex-grow-1 justify-content-start align-items-center gap-2">
+                        @await Component.InvokeAsync("MainMenu")
+                        <li class="nav-item">
+                            <a class="nav-link font-weight-bold" asp-controller="Pages" asp-action="Horario">Horario</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contenedor principal con z-index alto -->
+    <div class="container" style="position: relative; z-index: 10; margin-top: 5rem; padding: 2rem; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px;">
+        <main role="main" class="pb-3">
+            <partial name="_NotificationPartial" />
+            <div class="row">
+                <!-- Menú de categorías -->
+                <div class="col-3">
+                    @await Component.InvokeAsync("Categories")
+
+                    <div class="smallcart bg-success mt-3 p-3 text-white">
+                        @await Component.InvokeAsync("SmallCart")
+                    </div>
+                </div>
+
+                <!-- Contenedor de productos -->
+                <div class="col-9 d-flex flex-wrap justify-content-center">
+                    <!-- Aquí se renderizan los productos -->
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 w-100">
+                        @RenderBody()
+                    </div>
+                </div>  
+            </div>
+        </main>
+    </div>
+    <br /><br /><br />
+    <footer class="border-top footer text-muted" style="position: relative; z-index: 1; color:black; font-size:18px"> 
+        <strong class="container" style="text-align: center">
+            &copy; 2025 - Taqueria Iguala - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </strong>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html> 
