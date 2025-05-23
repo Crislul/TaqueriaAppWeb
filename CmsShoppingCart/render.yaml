@@ -1,0 +1,6 @@
+﻿services:
+  - type: web
+    name: taqueria-web
+    runtime: docker
+    rootDir: CmsShoppingCart
+    dockerfilePath: CmsShoppingCart/Dockerfile
