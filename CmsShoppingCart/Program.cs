@@ -11,6 +11,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using System.Globalization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.StaticFiles;
+
+
+
 
 // configuracion de $
 var cultura = new CultureInfo("es-MX");
@@ -50,6 +55,8 @@ services.AddIdentity<AppUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<CmsShoppingCartContext>()
 .AddDefaultTokenProviders();
 
+
+
 // Autenticación
 services.AddAuthentication().AddCookie(options =>
 {
@@ -67,6 +74,34 @@ services.AddHttpClient();
 
 // Construir app
 var app = builder.Build();
+
+//descargar apk
+var downloadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "downloads");
+
+app.MapGet("/download-app", async (HttpContext context) =>
+{
+    var fileName = "TaqueriaIguala.apk";
+    var filePath = Path.Combine(downloadsFolder, fileName);
+
+    if (!System.IO.File.Exists(filePath))
+    {
+        context.Response.StatusCode = 404;
+        await context.Response.WriteAsync("Archivo no encontrado");
+        return;
+    }
+
+    var provider = new FileExtensionContentTypeProvider();
+    if (!provider.TryGetContentType(filePath, out var contentType))
+    {
+        contentType = "application/octet-stream";
+    }
+
+    context.Response.ContentType = contentType;
+    context.Response.Headers.Add("Content-Disposition", $"attachment; filename={fileName}");
+
+    await context.Response.SendFileAsync(filePath);
+});
+
 
 // Semilla de datos
 using (var scope = app.Services.CreateScope())
